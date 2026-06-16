@@ -220,8 +220,41 @@ const getMonthlyReport = (req, res) => {
 };
 
 
+const getAllAttendanceLogs = (req, res) => {
+
+    const sql = `
+        SELECT
+            al.id,
+            e.employee_id,
+            e.full_name,
+            e.department,
+            al.entry_time,
+            al.exit_time,
+            al.attendance_date
+        FROM attendance_logs al
+        JOIN employees e
+            ON al.employee_id = e.id
+        ORDER BY al.entry_time DESC
+    `;
+
+    db.query(sql, (err, results) => {
+
+        if (err) {
+            console.error(err);
+
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        res.json(results);
+    });
+};
+
+
 module.exports = {
     registerEntry,
     registerExit,
-    getMonthlyReport
+    getMonthlyReport,
+    getAllAttendanceLogs
 };

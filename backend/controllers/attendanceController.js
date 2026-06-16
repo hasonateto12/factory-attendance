@@ -91,6 +91,94 @@ const registerEntry = (req, res) => {
     });
 };
 
+
+const registerExit = (req, res) => {
+
+    const { employee_id } = req.body;
+
+    if (!employee_id) {
+        return res.status(400).json({
+            message: "Employee ID is required"
+        });
+    }
+
+    const employeeSql = `
+        SELECT *
+        FROM employees
+        WHERE employee_id = ?
+    `;
+
+    db.query(employeeSql, [employee_id], (err, employeeResults) => {
+
+        if (err) {
+            console.error(err);
+
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        if (employeeResults.length === 0) {
+            return res.status(404).json({
+                message: "Employee not found"
+            });
+        }
+
+        const employee = employeeResults[0];
+
+        const attendanceSql = `
+            SELECT *
+            FROM attendance_logs
+            WHERE employee_id = ?
+            AND exit_time IS NULL
+            ORDER BY entry_time DESC
+            LIMIT 1
+        `;
+
+        db.query(attendanceSql, [employee.id], (err, attendanceResults) => {
+
+            if (err) {
+                console.error(err);
+
+                return res.status(500).json({
+                    message: "Database error"
+                });
+            }
+
+            if (attendanceResults.length === 0) {
+                return res.status(400).json({
+                    message: "Employee is not currently inside the factory"
+                });
+            }
+
+            const attendance = attendanceResults[0];
+
+            const updateSql = `
+                UPDATE attendance_logs
+                SET exit_time = NOW()
+                WHERE id = ?
+            `;
+
+            db.query(updateSql, [attendance.id], (err) => {
+
+                if (err) {
+                    console.error(err);
+
+                    return res.status(500).json({
+                        message: "Database error"
+                    });
+                }
+
+                res.json({
+                    message: "Exit registered successfully"
+                });
+            });
+        });
+    });
+};
+
+
 module.exports = {
-    registerEntry
+    registerEntry,
+    registerExit
 };

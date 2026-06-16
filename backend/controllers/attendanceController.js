@@ -178,7 +178,50 @@ const registerExit = (req, res) => {
 };
 
 
+const getMonthlyReport = (req, res) => {
+
+    const { idNumber } = req.params;
+    const { month, year } = req.query;
+
+    if (!month || !year) {
+        return res.status(400).json({
+            message: "Month and year are required"
+        });
+    }
+
+    const sql = `
+        SELECT 
+            al.id,
+            e.employee_id,
+            e.full_name,
+            e.department,
+            al.entry_time,
+            al.exit_time,
+            al.attendance_date
+        FROM attendance_logs al
+        JOIN employees e ON al.employee_id = e.id
+        WHERE e.employee_id = ?
+        AND MONTH(al.attendance_date) = ?
+        AND YEAR(al.attendance_date) = ?
+        ORDER BY al.entry_time DESC
+    `;
+
+    db.query(sql, [idNumber, month, year], (err, results) => {
+
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        res.json(results);
+    });
+};
+
+
 module.exports = {
     registerEntry,
-    registerExit
+    registerExit,
+    getMonthlyReport
 };

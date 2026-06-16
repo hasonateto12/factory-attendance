@@ -1,34 +1,62 @@
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Button,
+    Box
+} from "@mui/material";
+
 import { Link, Outlet } from "react-router-dom";
 
 export default function MainLayout() {
+
     return (
-        <div>
 
-            <nav
-                style={{
-                    display: "flex",
-                    gap: "20px",
-                    padding: "20px",
-                    backgroundColor: "#1976d2"
-                }}
-            >
-                <Link to="/" style={{color: "white"}}>
-                    כניסה
-                </Link>
+        <>
 
-                <Link to="/exit" style={{color: "white"}}>
-                    יציאה
-                </Link>
+            <AppBar position="static">
 
-                <Link to="/reports" style={{color: "white"}}>
-                    דוחות
-                </Link>
-            </nav>
+                <Toolbar>
 
-            <div style={{padding: "20px"}}>
+                    <Typography
+                        variant="h6"
+                        sx={{ flexGrow: 1 }}
+                    >
+                        מערכת נוכחות עובדים
+                    </Typography>
+
+                    <Button
+                        color="inherit"
+                        component={Link}
+                        to="/"
+                    >
+                        כניסה
+                    </Button>
+
+                    <Button
+                        color="inherit"
+                        component={Link}
+                        to="/exit"
+                    >
+                        יציאה
+                    </Button>
+
+                    <Button
+                        color="inherit"
+                        component={Link}
+                        to="/reports"
+                    >
+                        דוחות
+                    </Button>
+
+                </Toolbar>
+
+            </AppBar>
+
+            <Box p={3}>
                 <Outlet />
-            </div>
+            </Box>
 
-        </div>
+        </>
     );
 }

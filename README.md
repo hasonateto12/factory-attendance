@@ -1,34 +1,27 @@
 # Factory Attendance System
 
-מערכת רישום נוכחות במפעל לפי תעודת זהות.
+מערכת רישום נוכחות עובדים במפעל.
 
-## Project Description
+## טכנולוגיות
 
-The system allows factory employees to register entry and exit using only their ID number.
-
-No login system is required.
-
-## Main Features
-
-- Employee entry registration
-- Employee exit registration
-- Monthly attendance report by employee ID, month and year
-
-## Technologies
-
-### Backend
-- Node.js
-- Express
-- MySQL
-
-### Frontend
+### Client
 - React
 - Vite
-- Material UI
-- RTL Hebrew UI
+- MUI
+- Axios
 
-## Database
+### Server
+- Node.js
+- Express
 
-Database name:
+### Database
+- MySQL
 
-factory_attendance
+## התקנה
+
+### Server
+
+```bash
+cd backend
+npm install
+node server.js
